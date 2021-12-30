@@ -2,8 +2,6 @@
 call plug#begin('$HOME/.config/nvim/plugged')
 
 " General
-" Plug 'preservim/nerdtree'
-Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'tpope/vim-surround'
 Plug 'greyblake/vim-colors-solarized'
 Plug 'tpope/vim-fugitive'
@@ -16,7 +14,6 @@ Plug 'w0rp/ale'
 Plug 'ryanoasis/vim-devicons'
 Plug 'mustache/vim-mustache-handlebars'
 Plug 'gyim/vim-boxdraw'
-Plug 'preservim/tagbar'
 Plug 'airblade/vim-gitgutter'
 
 " Debugging
@@ -48,11 +45,6 @@ Plug 'honza/vim-snippets'
 "HTML
 Plug 'mattn/emmet-vim'
 
-"Javscript
-" Plug 'pangloss/vim-javascript'
-" Plug 'leafgarland/typescript-vim'
-" Plug 'Quramy/tsuquyomi' " Autocomplete for TS
-
 " Collection of common configurations for the Nvim LSP client
 Plug 'neovim/nvim-lspconfig'
 Plug 'hrsh7th/nvim-cmp'
@@ -63,6 +55,7 @@ Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-telescope/telescope-file-browser.nvim'
+Plug 'nvim-telescope/telescope-dap.nvim'
 
 " Rust
 Plug 'rust-lang/rust.vim'
@@ -72,9 +65,6 @@ Plug 'simrat39/rust-tools.nvim'
 
 " Extensions to built-in LSP, for example, providing type inlay hints
 Plug 'tjdevries/lsp_extensions.nvim'
-
-" Autocompletion framework for built-in LSP
-" Plug 'nvim-lua/completion-nvim'
 
 " Diagnostic navigation and settings for built-in LSP
 Plug 'nvim-lua/diagnostic-nvim'
@@ -86,8 +76,6 @@ Plug 'aklt/plantuml-syntax'
 " Esperanto keyboard
 Plug 'greyblake/vim-esperanto'
 let g:EoMap = "x"
-
-" Plug 'neovim/termdebug'
 
 call plug#end()
 
@@ -119,18 +107,15 @@ set dir=$HOME/.nvim/tmp
 
 " Set Gruvbox color scheme
 set background=dark
-colorscheme gruvbox8
+colorscheme PaperColor
 
-" Search files by name
-nnoremap <C-p> <cmd>Telescope git_files<cr>
+" nvim window nav
+nmap <silent> <C-A-Up> :wincmd k<CR>
+nmap <silent> <C-A-Down> :wincmd j<CR>
+nmap <silent> <C-A-Left> :wincmd h<CR>
+nmap <silent> <C-A-Right> :wincmd l<CR>
 
-" Search with grep
-nnoremap <C-f> <cmd>Telescope live_grep<cr>
-
-" Search symbols in workspace
-nnoremap <C-s> <cmd>Telescope lsp_workspace_symbols<cr>
-
-" Telescope binding for single-press escape
+" Telescope setup + binding for single-press escape + extensions
 lua <<EOF
 local actions = require('telescope.actions')
 require('telescope').setup{
@@ -143,42 +128,16 @@ require('telescope').setup{
   },
 }
 require('telescope').load_extension "file_browser"
+require('telescope').load_extension "dap"
 EOF
 
+" Telescope bindings
+nnoremap <C-p> <cmd>Telescope git_files<cr>
+nnoremap <C-f> <cmd>Telescope live_grep<cr>
+nnoremap <C-s> <cmd>Telescope lsp_workspace_symbols<cr>
 nnoremap <C-m> <cmd>lua require('telescope').extensions.file_browser.file_browser { path = "%:p:h" }<cr>
 
-" Toggle tagbar
-nmap <F8> :TagbarToggle<CR>
-let g:tagbar_width=60
-" Special mapping for .tsx
-let g:tagbar_type_typescriptreact = {
-\ 'ctagstype': 'typescript',
-\ 'kinds': [
-  \ 'c:class',
-  \ 'n:namespace',
-  \ 'f:function',
-  \ 'G:generator',
-  \ 'v:variable',
-  \ 'm:method',
-  \ 'p:property',
-  \ 'i:interface',
-  \ 'g:enum',
-  \ 't:type',
-  \ 'a:alias',
-\ ],
-\'sro': '.',
-  \ 'kind2scope' : {
-  \ 'c' : 'class',
-  \ 'n' : 'namespace',
-  \ 'i' : 'interface',
-  \ 'f' : 'function',
-  \ 'G' : 'generator',
-  \ 'm' : 'method',
-  \ 'p' : 'property',
-  \},
-\ }
-
-" Bubble selection (it depends on unimpaired plugin)
+" Bubble selection (using vim-unimpaired)
 nmap <A-k> [e
 nmap <A-Up> [e
 nmap <A-j> ]e
@@ -215,14 +174,11 @@ let g:ale_fixers = {
 \   'rust': ['cargo', 'rustfmt']
 \}
 
-
 " For vim-markdown-preview plugin
 let vim_markdown_preview_github=1
 
-
 " Use the old verison of snipmate parser
 let g:snipMate = { 'snippet_version' : 0 }
-
 
 " Configure LSP for rust-analyzer
 " Set completeopt to have a better completion experience
@@ -282,24 +238,34 @@ EOF
 " Configure LSP
 " See: https://sharksforarms.dev/posts/neovim-rust/
 lua <<EOF
+local extension_path = '/home/olivier/.vscode-oss/extensions/vadimcn.vscode-lldb-1.6.10/'
+local codelldb_path = extension_path .. 'adapter/codelldb'
+local liblldb_path = extension_path .. 'lldb/lib/liblldb.so'
+
 local opts = {
     tools = { -- rust-tools options
         --autoSetHints = true,
-        hover_with_actions = true,
+        --hover_with_actions = true,
         inlay_hints = {
             show_parameter_hints = false,
             parameter_hints_prefix = "",
             other_hints_prefix = "",
         },
+
+        -- runnables
+        runnables = {
+            use_telescope = true
+        },
+
+        -- debuggables
+        debuggables = {
+            use_telescope = true
+        }
     },
 
     -- debugging setup
     dap = {
-        adapter = {
-            type = 'executable',
-            command = 'lldb-vscode',
-            name = "rt_lldb"
-        }
+        adapter = require('rust-tools.dap').get_codelldb_adapter(codelldb_path, liblldb_path)
     },
 
     -- all the opts to send to nvim-lspconfig
@@ -327,7 +293,7 @@ vim.lsp.handlers["textDocument/references"] = require("telescope.builtin").lsp_r
 vim.lsp.handlers["textDocument/symbols"] = require("telescope.builtin").lsp_document_symbol
 EOF
 
-" Rust nvim lsp
+" Rust nvim lsp bindings
 nnoremap <silent> K     <cmd>lua vim.lsp.buf.hover()<CR>
 nnoremap <silent> gi    <cmd>Telescope lsp_implementations<CR>
 nnoremap <silent> <c-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
@@ -336,21 +302,36 @@ nnoremap <silent> gr    <cmd>Telescope lsp_references<CR>
 nnoremap <silent> g0    <cmd>lua vim.lsp.buf.document_symbol()<CR>
 nnoremap <silent> gW    <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
 nnoremap <silent> gd    <cmd>lua vim.lsp.buf.definition()<CR>
+nnoremap <silent> gp    <cmd>lua require 'rust-tools.parent_module'.parent_module()<CR>
 nnoremap <silent> <F2>    <cmd>lua vim.lsp.buf.rename()<CR>
-
-" Quick-fix
 nnoremap <silent> ga    <cmd>Telescope lsp_code_actions<CR>
 
 " Synchronize nvim clipboard with X clipboard
 set clipboard+=unnamedplus
 
 " Case smart-sensitive
-
 set smartcase
 set ignorecase
 
-" Debug Rust
-let g:termdebugger='lldb-vscode'
+" Debug Rust + dapui
+let g:termdebugger='lldb'
+nnoremap <silent> ma    <cmd>lua require 'dap'.run({type = 'rust', request = 'attach', cwd = vim.fn.getcwd()})<CR>
+nnoremap <silent> mb    <cmd>lua require 'dap'.toggle_breakpoint()<CR>
+nnoremap <silent> mr    <cmd>lua require 'rust-tools.runnables'.runnables()<CR>
+nnoremap <silent> md    <cmd>lua require 'rust-tools.debuggables'.debuggables()<CR>
+nnoremap <silent> mme    <cmd>lua require 'rust-tools.expand_macro'.expand_macro()<CR>
+nnoremap <silent> mi    <cmd>lua require 'dap.ui.widgets'.hover()<CR>
+nnoremap <silent> mj    <cmd>lua require 'dap.ui'.down()<CR>
+nnoremap <silent> mk    <cmd>lua require 'dap.ui'.up()<CR>
+nnoremap <silent> mv    <cmd>Telescope dap variables<CR>
+nnoremap <silent> mf    <cmd>Telescope dap frames<CR>
+nnoremap <silent> mw    <cmd>lua require 'dapui'.toggle()<CR>
+nnoremap <silent> me    <cmd>lua require 'dapui'.eval()<CR>
+nnoremap <silent> <F10>    <cmd>lua require 'dap'.step_over()<CR>
+nnoremap <silent> <F11>    <cmd>lua require 'dap'.step_into()<CR>
+nnoremap <silent> <S-F11>    <cmd>lua require 'dap'.step_out()<CR>
+nnoremap <silent> <F5>    <cmd>lua require 'dap'.continue()<CR>
+nnoremap <silent> <F4>    <cmd>lua require 'dap'.restart()<CR>
 
 " Setup Completion
 " See https://github.com/hrsh7th/nvim-cmp#basic-configuration
