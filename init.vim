@@ -2,48 +2,26 @@
 call plug#begin('$HOME/.config/nvim/plugged')
 
 " General
-Plug 'tpope/vim-surround'
-Plug 'greyblake/vim-colors-solarized'
 Plug 'tpope/vim-fugitive'
 Plug 'scrooloose/nerdcommenter'
-Plug 'godlygeek/tabular'
 Plug 'tpope/vim-unimpaired'
-Plug 'itchyny/lightline.vim'
-Plug 'vimlab/split-term.vim'
-Plug 'w0rp/ale'
-Plug 'ryanoasis/vim-devicons'
-Plug 'mustache/vim-mustache-handlebars'
-Plug 'gyim/vim-boxdraw'
 Plug 'airblade/vim-gitgutter'
+
+" Lightline
+Plug 'itchyny/lightline.vim'
+Plug 'itchyny/vim-gitbranch'
+Plug 'josa42/nvim-lightline-lsp'
 
 " Debugging
 Plug 'mfussenegger/nvim-dap'
 Plug 'rcarriga/nvim-dap-ui'
 
-" Theme
-Plug 'ayu-theme/ayu-vim'
-Plug 'morhetz/gruvbox'
-Plug 'lifepillar/vim-gruvbox8'
-Plug 'joshdick/onedark.vim'
+" Themes
+Plug 'rafi/awesome-vim-colorschemes'
+Plug 'ryanoasis/vim-devicons'
 
 " Markdown
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
-Plug 'dhruvasagar/vim-table-mode'
-
-" Autocomplete (requires python3)
-Plug 'rafi/awesome-vim-colorschemes'
-Plug 'vim-airline/vim-airline'
-Plug 'tpope/vim-rhubarb'
-Plug 'tpope/vim-abolish'
-
-" Snipmate and snippets
-Plug 'MarcWeber/vim-addon-mw-utils'
-Plug 'tomtom/tlib_vim'
-Plug 'garbas/vim-snipmate'
-Plug 'honza/vim-snippets'
-
-"HTML
-Plug 'mattn/emmet-vim'
 
 " Collection of common configurations for the Nvim LSP client
 Plug 'neovim/nvim-lspconfig'
@@ -63,19 +41,15 @@ Plug 'cespare/vim-toml'
 Plug 'pest-parser/pest.vim'
 Plug 'simrat39/rust-tools.nvim'
 
+" C#
+Plug 'razzmatazz/csharp-language-server'
+Plug 'OmniSharp/omnisharp-vim'
+
 " Extensions to built-in LSP, for example, providing type inlay hints
 Plug 'tjdevries/lsp_extensions.nvim'
 
 " Diagnostic navigation and settings for built-in LSP
 Plug 'nvim-lua/diagnostic-nvim'
-
-" PlantUML
-Plug 'scrooloose/vim-slumlord'
-Plug 'aklt/plantuml-syntax'
-
-" Esperanto keyboard
-Plug 'greyblake/vim-esperanto'
-let g:EoMap = "x"
 
 call plug#end()
 
@@ -105,7 +79,7 @@ filetype indent on
 " SWAP files
 set dir=$HOME/.nvim/tmp
 
-" Set Gruvbox color scheme
+" Set color scheme
 set background=dark
 colorscheme PaperColor
 
@@ -166,14 +140,6 @@ endfor
 " Remove trailing spaces on save
 autocmd BufWritePre * :%s/\s\+$//e
 
-" Configure ALE lints
-let g:ale_fixers = {
-\   '*': ['remove_trailing_lines', 'trim_whitespace'],
-\   'javascript': ['eslint'],
-\   'ruby': ['rubocop'],
-\   'rust': ['cargo', 'rustfmt']
-\}
-
 " For vim-markdown-preview plugin
 let vim_markdown_preview_github=1
 
@@ -191,6 +157,35 @@ let g:rustfmt_autosave = 1
 
 " Avoid showing extra messages when using completion
 set shortmess+=c
+
+let g:lightline = {
+    \ 'colorscheme': 'deus',
+    \ 'active': {
+    \     'left': [
+    \         ['mode', 'paste'],
+    \         ['filename'],
+    \     ],
+    \     'right': [
+    \         ['lineinfo'],
+    \         ['gitbranch'],
+    \         ['fileencoding', 'filetype'],
+    \         ['lsp_status'],
+    \     ]
+    \ },
+    \ 'component_function': {
+    \     'gitbranch': 'LightlineGitBranch',
+    \ }
+    \ }
+
+call lightline#lsp#register()
+
+function! LightlineGitBranch()
+    let l:branch_name = gitbranch#name()
+    if len(l:branch_name) >= 20
+        return ' ' . l:branch_name[:20]
+    endif
+    return ' ' . l:branch_name
+endfunction
 
 " Setup DAPUI (Debugger)
 lua<<EOF
@@ -244,8 +239,6 @@ local liblldb_path = extension_path .. 'lldb/lib/liblldb.so'
 
 local opts = {
     tools = { -- rust-tools options
-        --autoSetHints = true,
-        --hover_with_actions = true,
         inlay_hints = {
             show_parameter_hints = false,
             parameter_hints_prefix = "",
@@ -276,10 +269,6 @@ local opts = {
         -- to enable rust-analyzer settings visit:
         -- https://github.com/rust-analyzer/rust-analyzer/blob/master/docs/user/generated_config.adoc
         ["rust-analyzer"] = {
-          -- enable clippy on save
-            checkOnSave = {
-                command = "clippy"
-            },
         },
     }
 }
@@ -287,6 +276,11 @@ local opts = {
 require('rust-tools').setup(opts)
 require'lspconfig'.tsserver.setup{
     cmd = { "typescript-language-server", "--stdio" },
+}
+--require'lspconfig'.csharp_ls.setup{}
+local pid = vim.fn.getpid()
+require'lspconfig'.omnisharp.setup{
+    cmd = { "omnisharp", "--languageserver", "--hostPID", tostring(pid) },
 }
 
 vim.lsp.handlers["textDocument/references"] = require("telescope.builtin").lsp_references
@@ -373,7 +367,4 @@ EOF
 " 300ms of no cursor movement to trigger CursorHold
 set updatetime=300
 " Show diagnostic popup on cursor hover
-autocmd CursorHold * lua vim.lsp.diagnostic.show_line_diagnostics()
-
-" source ~/.config/nvim/coc_defaults.vim
-" source ~/.config/nvim/coc_mappings.vim
+" autocmd CursorHold * lua vim.lsp.diagnostic.show_line_diagnostics()
