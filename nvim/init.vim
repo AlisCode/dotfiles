@@ -2,10 +2,8 @@
 call plug#begin('$HOME/.config/nvim/plugged')
 
 " General
-Plug 'tpope/vim-fugitive'
 Plug 'scrooloose/nerdcommenter'
 Plug 'tpope/vim-unimpaired'
-Plug 'airblade/vim-gitgutter'
 Plug 'nvim-treesitter/nvim-treesitter'
 
 " Lightline
@@ -53,6 +51,11 @@ Plug 'tjdevries/lsp_extensions.nvim'
 
 " Diagnostic navigation and settings for built-in LSP
 Plug 'nvim-lua/diagnostic-nvim'
+
+" Versioning
+Plug 'tpope/vim-fugitive'
+Plug 'airblade/vim-gitgutter'
+Plug 'sindrets/diffview.nvim'
 
 call plug#end()
 
@@ -108,7 +111,7 @@ require('telescope').setup{
 
 require('telescope').load_extension "file_browser"
 require('telescope').load_extension "dap"
-require("telescope").load_extension "ui-select"
+require('telescope').load_extension "ui-select"
 EOF
 
 " Telescope bindings
@@ -297,7 +300,7 @@ nnoremap <silent> K     <cmd>lua vim.lsp.buf.hover()<CR>
 nnoremap <silent> gi    <cmd>lua vim.lsp.buf.implementation()<CR>
 nnoremap <silent> <c-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
 nnoremap <silent> gt    <cmd>lua vim.lsp.buf.type_definition()<CR>
-nnoremap <silent> gr    <cmd>lua vim.lsp.buf.reference()<CR>
+nnoremap <silent> gr    <cmd>lua vim.lsp.buf.references()<CR>
 nnoremap <silent> g0    <cmd>lua vim.lsp.buf.document_symbol()<CR>
 nnoremap <silent> gW    <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
 nnoremap <silent> gd    <cmd>lua vim.lsp.buf.definition()<CR>
