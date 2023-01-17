@@ -113,9 +113,10 @@ lua <<EOF
                 background = "Normal",
             },
         },
+        open_mapping = [[mt]],
     })
 EOF
-nnoremap <silent> mt :ToggleTerm<CR>
+tnoremap <Esc> <C-\><C-n>
 
 " Telescope setup + binding for single-press escape + extensions
 lua <<EOF
