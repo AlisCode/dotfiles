@@ -5,6 +5,7 @@ call plug#begin('$HOME/.config/nvim/plugged')
 Plug 'scrooloose/nerdcommenter'
 Plug 'tpope/vim-unimpaired'
 Plug 'nvim-treesitter/nvim-treesitter'
+Plug 'akinsho/toggleterm.nvim'
 
 " Lightline
 Plug 'itchyny/lightline.vim'
@@ -19,9 +20,6 @@ Plug 'rcarriga/nvim-dap-ui'
 Plug 'rafi/awesome-vim-colorschemes'
 Plug 'ryanoasis/vim-devicons'
 Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
-
-" Markdown
-Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 
 " Collection of common configurations for the Nvim LSP client
 Plug 'neovim/nvim-lspconfig'
@@ -61,8 +59,8 @@ Plug 'airblade/vim-gitgutter'
 Plug 'sindrets/diffview.nvim'
 
 " Copilot
-"Plug 'zbirenbaum/copilot.lua'
-"Plug 'zbirenbaum/copilot-cmp'
+Plug 'zbirenbaum/copilot.lua'
+Plug 'zbirenbaum/copilot-cmp'
 
 call plug#end()
 
@@ -103,6 +101,22 @@ nmap <silent> <C-A-Down> :wincmd j<CR>
 nmap <silent> <C-A-Left> :wincmd h<CR>
 nmap <silent> <C-A-Right> :wincmd l<CR>
 
+" toggleterm
+lua <<EOF
+    require("toggleterm").setup({
+        direction = "float",
+        float_opts = {
+            border = "curved",
+            winblend = 3,
+            highlights = {
+                border = "Normal",
+                background = "Normal",
+            },
+        },
+    })
+EOF
+nnoremap <silent> mt :ToggleTerm<CR>
+
 " Telescope setup + binding for single-press escape + extensions
 lua <<EOF
 local actions = require('telescope.actions')
@@ -142,26 +156,8 @@ vmap <A-Down> ]egv
 nmap <C-l> <plug>NERDCommenterToggle
 vmap <C-l> <plug>NERDCommenterToggle
 
-" Also need to process "|"
-let chars = [' ', '!', '"', '#', '$', '%', '&', "'", '(', ')', '*', '+', ',', '-', '.', '/', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', '<', '=', '>', '?', '@', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '[', '\', ']', '^', '_', '`', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '{', '}', '~']
-for c in chars
-   if c == ' '
-       let key = '<Space>'
-   else
-       let key = c
-   endif
-   exe 'imap <C-]>' . key . ' <Esc>f' . c . 'i'
-   exe 'imap <C-A-]>' . key . ' <Esc>F' . c . 'i'
-endfor
-
 " Remove trailing spaces on save
 autocmd BufWritePre * :%s/\s\+$//e
-
-" For vim-markdown-preview plugin
-let vim_markdown_preview_github=1
-
-" Use the old verison of snipmate parser
-let g:snipMate = { 'snippet_version' : 0 }
 
 " Configure LSP for rust-analyzer
 let g:rustfmt_autosave = 1
@@ -366,27 +362,27 @@ nnoremap <silent> <F4>    <cmd>lua require 'dap'.restart()<CR>
 
 " Setup Copilot
 lua <<EOF
---require("copilot").setup({
---  suggestion = {
---    enabled = true,
---    auto_trigger = false,
---    keymap = {
---        accept = "<Tab>",
---    },
---  },
---  panel = { enabled = false },
---  server_opts_overrides = {
---    settings = {
---        advanced = {
---            listCount = 5,
---            inlineSuggestCount = 1,
---        },
---    },
---  },
---})
---require("copilot_cmp").setup({
---   method = "getCompletionsCycling",
---})
+require("copilot").setup({
+  suggestion = {
+    enabled = true,
+    auto_trigger = false,
+    keymap = {
+        accept = "<C-Tab>",
+    },
+  },
+  panel = { enabled = false },
+  server_opts_overrides = {
+    settings = {
+        advanced = {
+            listCount = 10,
+            inlineSuggestCount = 5,
+        },
+    },
+  },
+})
+require("copilot_cmp").setup({
+   method = "getCompletionsCycling",
+})
 EOF
 
 " Setup Completion
@@ -411,10 +407,10 @@ cmp.setup({
         })
   },
   sources = {
-    { name = 'nvim_lsp', group_index = 1 },
-    { name = 'buffer', group_index = 2 },
-    --{ name = 'copilot', group_index = 2 },
-    { name = 'path', group_index = 2 },
+    { name = 'nvim_lsp' },
+    { name = 'buffer' },
+    { name = 'copilot' },
+    { name = 'path' },
   },
 })
 EOF
