@@ -46,6 +46,9 @@ Plug 'simrat39/rust-tools.nvim'
 Plug 'razzmatazz/csharp-language-server'
 Plug 'OmniSharp/omnisharp-vim'
 
+" Github Actions
+Plug 'yasuhiroki/github-actions-yaml.vim'
+
 " Extensions to built-in LSP, for example, providing type inlay hints
 Plug 'tjdevries/lsp_extensions.nvim'
 
@@ -56,6 +59,10 @@ Plug 'nvim-lua/diagnostic-nvim'
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 Plug 'sindrets/diffview.nvim'
+
+" Copilot
+"Plug 'zbirenbaum/copilot.lua'
+"Plug 'zbirenbaum/copilot-cmp'
 
 call plug#end()
 
@@ -157,12 +164,6 @@ let vim_markdown_preview_github=1
 let g:snipMate = { 'snippet_version' : 0 }
 
 " Configure LSP for rust-analyzer
-" Set completeopt to have a better completion experience
-" :help completeopt
-" menuone: popup even when there's only one match
-" noinsert: Do not insert text until a selection is made
-" noselect: Do not select, force user to select one from the menu
-set completeopt=menuone,noinsert,noselect
 let g:rustfmt_autosave = 1
 
 " Avoid showing extra messages when using completion
@@ -272,9 +273,9 @@ EOF
 " Configure LSP
 " See: https://sharksforarms.dev/posts/neovim-rust/
 lua <<EOF
-local extension_path = '/home/olivier/.vscode-oss/extensions/vadimcn.vscode-lldb-1.6.10/'
-local codelldb_path = extension_path .. 'adapter/codelldb'
-local liblldb_path = extension_path .. 'lldb/lib/liblldb.so'
+--local extension_path = '/home/olivier/.vscode-oss/extensions/vadimcn.vscode-lldb-1.8.1-universal/'
+--local codelldb_path = extension_path .. 'adapter/codelldb'
+--local liblldb_path = extension_path .. 'lldb/lib/liblldb.so'
 
 local opts = {
     tools = { -- rust-tools options
@@ -296,9 +297,9 @@ local opts = {
     },
 
     -- debugging setup
-    dap = {
-        adapter = require('rust-tools.dap').get_codelldb_adapter(codelldb_path, liblldb_path)
-    },
+    --dap = {
+        --adapter = require('rust-tools.dap').get_codelldb_adapter(codelldb_path, liblldb_path),
+    --},
 
     -- all the opts to send to nvim-lspconfig
     -- these override the defaults set by rust-tools.nvim -- see https://github.com/neovim/nvim-lspconfig/blob/master/CONFIG.md#rust_analyzer server = {
@@ -328,7 +329,7 @@ EOF
 nnoremap <silent> K     <cmd>lua vim.lsp.buf.hover()<CR>
 nnoremap <silent> gi    <cmd>lua vim.lsp.buf.implementation()<CR>
 nnoremap <silent> <c-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
-nnoremap <silent> gt    <cmd>lua vim.lsp.buf.type_definition()<CR>
+nnoremap <silent> gD    <cmd>lua vim.lsp.buf.type_definition()<CR>
 nnoremap <silent> gr    <cmd>lua vim.lsp.buf.references()<CR>
 nnoremap <silent> g0    <cmd>lua vim.lsp.buf.document_symbol()<CR>
 nnoremap <silent> gW    <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
@@ -346,7 +347,6 @@ set ignorecase
 
 " Debug Rust + dapui
 let g:termdebugger='lldb'
-nnoremap <silent> ma    <cmd>lua require 'dap'.run({type = 'rust', request = 'attach', cwd = vim.fn.getcwd()})<CR>
 nnoremap <silent> mb    <cmd>lua require 'dap'.toggle_breakpoint()<CR>
 nnoremap <silent> mr    <cmd>lua require 'rust-tools.runnables'.runnables()<CR>
 nnoremap <silent> md    <cmd>lua require 'rust-tools.debuggables'.debuggables()<CR>
@@ -364,38 +364,57 @@ nnoremap <silent> <S-F11>    <cmd>lua require 'dap'.step_out()<CR>
 nnoremap <silent> <F5>    <cmd>lua require 'dap'.continue()<CR>
 nnoremap <silent> <F4>    <cmd>lua require 'dap'.restart()<CR>
 
+" Setup Copilot
+lua <<EOF
+--require("copilot").setup({
+--  suggestion = {
+--    enabled = true,
+--    auto_trigger = false,
+--    keymap = {
+--        accept = "<Tab>",
+--    },
+--  },
+--  panel = { enabled = false },
+--  server_opts_overrides = {
+--    settings = {
+--        advanced = {
+--            listCount = 5,
+--            inlineSuggestCount = 1,
+--        },
+--    },
+--  },
+--})
+--require("copilot_cmp").setup({
+--   method = "getCompletionsCycling",
+--})
+EOF
+
 " Setup Completion
-" See https://github.com/hrsh7th/nvim-cmp#basic-configuration
+set completeopt=menu,menuone,noselect
 lua <<EOF
 local cmp = require'cmp'
 cmp.setup({
-  snippet = {
-    expand = function(args)
-        vim.fn["vsnip#anonymous"](args.body)
-    end,
+    window = {
+        completion = cmp.config.window.bordered(),
+        documentation = cmp.config.window.bordered(),
+    },
+    mapping = {
+        ['<C-p>'] = cmp.mapping.select_prev_item(),
+        ['<C-n>'] = cmp.mapping.select_next_item(),
+        ['<C-j>'] = cmp.mapping.scroll_docs(-4),
+        ['<C-k>'] = cmp.mapping.scroll_docs(4),
+        ['<C-space>'] = cmp.mapping.complete(),
+        ['<C-e>'] = cmp.mapping.close(),
+        ['<CR>'] = cmp.mapping.confirm({
+          behavior = cmp.ConfirmBehavior.Replace,
+          select = true,
+        })
   },
-  mapping = {
-    ['<C-p>'] = cmp.mapping.select_prev_item(),
-    ['<C-n>'] = cmp.mapping.select_next_item(),
-    -- Add tab support
-    ['<S-Tab>'] = cmp.mapping.select_prev_item(),
-    ['<Tab>'] = cmp.mapping.select_next_item(),
-    ['<C-d>'] = cmp.mapping.scroll_docs(-4),
-    ['<C-f>'] = cmp.mapping.scroll_docs(4),
-    ['<C-Space>'] = cmp.mapping.complete(),
-    ['<C-e>'] = cmp.mapping.close(),
-    ['<CR>'] = cmp.mapping.confirm({
-      behavior = cmp.ConfirmBehavior.Insert,
-      select = true,
-    })
-  },
-
-  -- Installed sources
   sources = {
-    { name = 'nvim_lsp' },
-    { name = 'buffer' },
-    --{ name = 'vsnip' },
-    --{ name = 'path' },
+    { name = 'nvim_lsp', group_index = 1 },
+    { name = 'buffer', group_index = 2 },
+    --{ name = 'copilot', group_index = 2 },
+    { name = 'path', group_index = 2 },
   },
 })
 EOF
