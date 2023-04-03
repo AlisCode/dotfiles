@@ -7,12 +7,11 @@ Plug 'tpope/vim-unimpaired'
 Plug 'nvim-treesitter/nvim-treesitter'
 Plug 'akinsho/toggleterm.nvim'
 
-" Lightline
-Plug 'itchyny/lightline.vim'
-Plug 'itchyny/vim-gitbranch'
-Plug 'josa42/nvim-lightline-lsp'
+" Lualine
+Plug 'nvim-lualine/lualine.nvim'
+Plug 'akinsho/bufferline.nvim'
 
-" Debugging
+" Debugging (DAP + DapUI)
 Plug 'mfussenegger/nvim-dap'
 Plug 'rcarriga/nvim-dap-ui'
 
@@ -23,8 +22,12 @@ Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
 
 " Collection of common configurations for the Nvim LSP client
 Plug 'neovim/nvim-lspconfig'
+Plug 'nvim-lua/lsp-status.nvim'
+
+" Completion & snippets
 Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'L3MON4D3/LuaSnip'
 
 " Nvim goodies
 Plug 'nvim-lua/popup.nvim'
@@ -58,13 +61,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 Plug 'sindrets/diffview.nvim'
 
-" Copilot
-Plug 'zbirenbaum/copilot.lua'
-Plug 'zbirenbaum/copilot-cmp'
-
 call plug#end()
-
-filetype plugin indent on
 
 " Custom settings
 syntax on
@@ -75,6 +72,10 @@ set expandtab
 set splitright
 set splitbelow
 set termguicolors
+
+" Set SPACE as leader key
+nnoremap <SPACE> <Nop>
+let mapleader = " "
 
 " Indent settings
 set shiftwidth=4
@@ -95,7 +96,7 @@ set background=dark
 let g:catpuccin_flavour = "macchiato" " latte, frappe, macchiato, mocha
 colorscheme catppuccin
 
-" nvim window nav
+" Window navigation
 nmap <silent> <C-A-Up> :wincmd k<CR>
 nmap <silent> <C-A-Down> :wincmd j<CR>
 nmap <silent> <C-A-Left> :wincmd h<CR>
@@ -113,9 +114,11 @@ lua <<EOF
                 background = "Normal",
             },
         },
-        open_mapping = [[mt]],
+        open_mapping = "<C-t>",
     })
 EOF
+
+" Enables visual-selection possibility in the terminal
 tnoremap <Esc> <C-\><C-n>
 
 " Telescope setup + binding for single-press escape + extensions
@@ -137,11 +140,11 @@ require('telescope').load_extension "ui-select"
 EOF
 
 " Telescope bindings
-nnoremap <C-p> <cmd>Telescope git_files<cr>
+nnoremap <C-p> <cmd>lua require('telescope.builtin').find_files { path = "%", respect_gitignore = true }<cr>
 nnoremap <C-f> <cmd>Telescope live_grep<cr>
-nnoremap <C-s> <cmd>Telescope lsp_workspace_symbols<cr>
-" TODO: When alacritty supports ctrl-m properly, switch to ctrl-m
-nnoremap <CR> <cmd>lua require('telescope').extensions.file_browser.file_browser { path = "%:p:h" }<cr>
+nnoremap <Leader>ws <cmd>Telescope lsp_workspace_symbols<cr>
+nnoremap <Leader>ds <cmd>Telescope lsp_document_symbols<cr>
+nnoremap <Leader>ml <cmd>lua require('telescope').extensions.file_browser.file_browser { path = "%:p:h" }<cr>
 
 " Bubble selection (using vim-unimpaired)
 nmap <A-k> [e
@@ -166,34 +169,72 @@ let g:rustfmt_autosave = 1
 " Avoid showing extra messages when using completion
 set shortmess+=c
 
-let g:lightline = {
-    \ 'colorscheme': 'catppuccin',
-    \ 'active': {
-    \     'left': [
-    \         ['mode', 'paste'],
-    \         ['filename'],
-    \     ],
-    \     'right': [
-    \         ['lineinfo'],
-    \         ['gitbranch'],
-    \         ['fileencoding', 'filetype'],
-    \         ['lsp_status'],
-    \     ]
-    \ },
-    \ 'component_function': {
-    \     'gitbranch': 'LightlineGitBranch',
-    \ }
-    \ }
+" Lualine
+lua<<EOF
+require('lualine').setup({
+    options = {
+        component_separators = { left = '|', right = '|' },
+        section_separators = { left = '', right = '' },
+        globalstatus = true,
+    },
+    sections = {
+        lualine_b = { 'branch' },
+        lualine_x = {
+            {
+                'diagnostics',
+                sources = { "nvim_lsp"},
+                colored = true,
+            }
+        },
+        lualine_y = { "require'lsp-status'.status()" },
+    },
+    tabline = {},
+    winbar = {},
+})
+EOF
+set noshowmode " Removes useless info from the default nvim bar
 
-call lightline#lsp#register()
-
-function! LightlineGitBranch()
-    let l:branch_name = gitbranch#name()
-    if len(l:branch_name) >= 20
-        return ' ' . l:branch_name[:20]
-    endif
-    return ' ' . l:branch_name
-endfunction
+lua<<EOF
+local colors = require("catppuccin.palettes").get_palette "macchiato";
+require('bufferline').setup({
+    options = {
+        mode = 'tabs',
+        seperator_style = 'slope',
+        indicator = {
+                icon = '▎',
+                style = 'icon',
+        },
+        themeable = true,
+        modified_icon = '●',
+        buffer_close_icon = '',
+        left_trunc_marker = '..',
+        right_trunc_marker = '..',
+        color_icons = true,
+        diagnostics = "nvim_lsp",
+        diagnostics_update_in_insert = false,
+        diagnostics_indicator = function(count, level, diagnostics_dict, context)
+            local icon = level:match("error") and " " or " "
+            return " " .. icon .. count
+        end,
+        name_formatter = function(buf)
+            if buf.name == 'DiffviewFilePanel' then
+                return 'Diff'
+            end
+            if string.match(buf.name,'#toggleterm#') then
+                return 'Terminal'
+            end
+        end,
+    },
+    highlights = {
+        indicator_selected = {
+            fg = colors.blue,
+        },
+        buffer_selected = {
+            italic = false,
+        },
+    },
+})
+EOF
 
 " Setup Diffview
 lua<<EOF
@@ -270,10 +311,6 @@ EOF
 " Configure LSP
 " See: https://sharksforarms.dev/posts/neovim-rust/
 lua <<EOF
---local extension_path = '/home/olivier/.vscode-oss/extensions/vadimcn.vscode-lldb-1.8.1-universal/'
---local codelldb_path = extension_path .. 'adapter/codelldb'
---local liblldb_path = extension_path .. 'lldb/lib/liblldb.so'
-
 local opts = {
     tools = { -- rust-tools options
         inlay_hints = {
@@ -292,29 +329,12 @@ local opts = {
             use_telescope = true
         }
     },
-
-    -- debugging setup
-    --dap = {
-        --adapter = require('rust-tools.dap').get_codelldb_adapter(codelldb_path, liblldb_path),
-    --},
-
-    -- all the opts to send to nvim-lspconfig
-    -- these override the defaults set by rust-tools.nvim -- see https://github.com/neovim/nvim-lspconfig/blob/master/CONFIG.md#rust_analyzer server = {
-    -- on_attach is a callback called when the language server attachs to the buffer
-    -- on_attach = on_attach,
-    settings = {
-        -- to enable rust-analyzer settings visit:
-        -- https://github.com/rust-analyzer/rust-analyzer/blob/master/docs/user/generated_config.adoc
-        ["rust-analyzer"] = {
-        },
-    }
 }
 
 require('rust-tools').setup(opts)
 require'lspconfig'.tsserver.setup{
     cmd = { "typescript-language-server", "--stdio" },
 }
---require'lspconfig'.csharp_ls.setup{}
 local pid = vim.fn.getpid()
 require'lspconfig'.omnisharp.setup{
     cmd = { "omnisharp", "--languageserver", "--hostPID", tostring(pid) },
@@ -325,10 +345,10 @@ EOF
 " Rust nvim lsp bindings
 nnoremap <silent> K     <cmd>lua vim.lsp.buf.hover()<CR>
 nnoremap <silent> gi    <cmd>lua vim.lsp.buf.implementation()<CR>
-nnoremap <silent> <c-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
+nnoremap <silent> <C-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
 nnoremap <silent> gD    <cmd>lua vim.lsp.buf.type_definition()<CR>
 nnoremap <silent> gr    <cmd>lua vim.lsp.buf.references()<CR>
-nnoremap <silent> g0    <cmd>lua vim.lsp.buf.document_symbol()<CR>
+nnoremap <silent> gs    <cmd>lua vim.lsp.buf.document_symbol()<CR>
 nnoremap <silent> gW    <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
 nnoremap <silent> gd    <cmd>lua vim.lsp.buf.definition()<CR>
 nnoremap <silent> gp    <cmd>lua require 'rust-tools.parent_module'.parent_module()<CR>
@@ -344,47 +364,22 @@ set ignorecase
 
 " Debug Rust + dapui
 let g:termdebugger='lldb'
-nnoremap <silent> mb    <cmd>lua require 'dap'.toggle_breakpoint()<CR>
-nnoremap <silent> mr    <cmd>lua require 'rust-tools.runnables'.runnables()<CR>
-nnoremap <silent> md    <cmd>lua require 'rust-tools.debuggables'.debuggables()<CR>
-nnoremap <silent> mme    <cmd>lua require 'rust-tools.expand_macro'.expand_macro()<CR>
-nnoremap <silent> mi    <cmd>lua require 'dap.ui.widgets'.hover()<CR>
-nnoremap <silent> mj    <cmd>lua require 'dap.ui'.down()<CR>
-nnoremap <silent> mk    <cmd>lua require 'dap.ui'.up()<CR>
-nnoremap <silent> mv    <cmd>Telescope dap variables<CR>
-nnoremap <silent> mf    <cmd>Telescope dap frames<CR>
-nnoremap <silent> mw    <cmd>lua require 'dapui'.toggle()<CR>
-nnoremap <silent> me    <cmd>lua require 'dapui'.eval()<CR>
+nnoremap <Leader> mb    <cmd>lua require 'dap'.toggle_breakpoint()<CR>
+nnoremap <Leader> mr    <cmd>lua require 'rust-tools.runnables'.runnables()<CR>
+nnoremap <Leader> md    <cmd>lua require 'rust-tools.debuggables'.debuggables()<CR>
+nnoremap <Leader> mme    <cmd>lua require 'rust-tools.expand_macro'.expand_macro()<CR>
+nnoremap <Leader> mi    <cmd>lua require 'dap.ui.widgets'.hover()<CR>
+nnoremap <Leader> mj    <cmd>lua require 'dap.ui'.down()<CR>
+nnoremap <Leader> mk    <cmd>lua require 'dap.ui'.up()<CR>
+nnoremap <Leader> mv    <cmd>Telescope dap variables<CR>
+nnoremap <Leader> mf    <cmd>Telescope dap frames<CR>
+nnoremap <Leader> mw    <cmd>lua require 'dapui'.toggle()<CR>
+nnoremap <Leader> me    <cmd>lua require 'dapui'.eval()<CR>
 nnoremap <silent> <F10>    <cmd>lua require 'dap'.step_over()<CR>
 nnoremap <silent> <F11>    <cmd>lua require 'dap'.step_into()<CR>
 nnoremap <silent> <S-F11>    <cmd>lua require 'dap'.step_out()<CR>
 nnoremap <silent> <F5>    <cmd>lua require 'dap'.continue()<CR>
 nnoremap <silent> <F4>    <cmd>lua require 'dap'.restart()<CR>
-
-" Setup Copilot
-lua <<EOF
-require("copilot").setup({
-  suggestion = {
-    enabled = true,
-    auto_trigger = false,
-    keymap = {
-        accept = "<C-Tab>",
-    },
-  },
-  panel = { enabled = false },
-  server_opts_overrides = {
-    settings = {
-        advanced = {
-            listCount = 10,
-            inlineSuggestCount = 5,
-        },
-    },
-  },
-})
-require("copilot_cmp").setup({
-   method = "getCompletionsCycling",
-})
-EOF
 
 " Setup Completion
 set completeopt=menu,menuone,noselect
@@ -402,17 +397,19 @@ cmp.setup({
         ['<C-k>'] = cmp.mapping.scroll_docs(4),
         ['<C-space>'] = cmp.mapping.complete(),
         ['<C-e>'] = cmp.mapping.close(),
-        ['<CR>'] = cmp.mapping.confirm({
-          behavior = cmp.ConfirmBehavior.Replace,
-          select = true,
-        })
-  },
-  sources = {
-    { name = 'nvim_lsp' },
-    { name = 'buffer' },
-    { name = 'copilot' },
-    { name = 'path' },
-  },
+        ["<CR>"] = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = true }),
+    },
+    sources = {
+        { name = 'nvim_lsp' },
+        { name = 'luasnip' },
+        { name = 'path' },
+        { name = 'buffer' },
+    },
+    snippet = {
+        expand = function(args)
+            require("luasnip").lsp_expand(args.body)
+        end,
+    },
 })
 EOF
 
