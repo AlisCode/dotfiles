@@ -23,3 +23,5 @@ vim.cmd [[ vmap <A-Down> ]egv ]]
 -- NERDCommenter
 vim.cmd [[ nmap <C-l> <plug>NerdCommenterToggle ]]
 vim.cmd [[ vmap <C-l> <plug>NerdCommenterToggle ]]
+
+vim.cmd [[ inoremap jk <Esc> ]]
