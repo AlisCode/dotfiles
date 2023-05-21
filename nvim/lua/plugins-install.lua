@@ -3,8 +3,7 @@ local Plug = vim.fn["plug#"]
 vim.call("plug#begin", "~/.config/nvim/plugged")
 
 -- General
-Plug "scrooloose/nerdcommenter" -- Comment lines with C-l
-Plug "tpope/vim-unimpaired" -- TODO: remove ?
+Plug "terrortylor/nvim-comment" -- Comment lines with C-l
 Plug "nvim-treesitter/nvim-treesitter" -- Syntax highlighting with Treesitter
 Plug "akinsho/toggleterm.nvim" -- Handy terminal
 
@@ -26,7 +25,7 @@ Plug "neovim/nvim-lspconfig" -- LSP integration
 -- Completion & snippets
 Plug "hrsh7th/nvim-cmp" -- Completion engine
 Plug "hrsh7th/cmp-nvim-lsp" -- Completion source from LSP
-Plug "L3MON4D3/LuaSnip" -- Snippent engine, required by nvim-cmp
+Plug "L3MON4D3/LuaSnip" -- Snippet engine, required by nvim-cmp
 
 Plug "nvim-lua/popup.nvim" -- TODO: remove ?
 Plug "nvim-lua/plenary.nvim" -- TODO: remove ?

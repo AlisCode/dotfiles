@@ -6,6 +6,7 @@ require("core.theme")
 
 require("plugins.bufferline")
 require("plugins.completion")
+require("plugins.comment")
 require("plugins.dap")
 require("plugins.diffview")
 require("plugins.lualine")

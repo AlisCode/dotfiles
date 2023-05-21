@@ -1,5 +1,3 @@
-local vim = vim
-
 -- Set SPACE as leader key
 vim.cmd [[ nnoremap <SPACE> <Nop> ]]
 vim.g.mapleader = " "
@@ -11,17 +9,11 @@ vim.cmd [[ nmap <silent> <C-A-Left> :wincmd h<CR> ]]
 vim.cmd [[ nmap <silent> <C-A-Right> :wincmd l<CR> ]]
 
 -- Bubble selection
-vim.cmd [[ nmap <A-k> [e ]]
-vim.cmd [[ nmap <A-Up> [e ]]
-vim.cmd [[ nmap <A-j> ]e ]]
-vim.cmd [[ nmap <A-Down> ]e ]]
-vim.cmd [[ vmap <A-k> [egv ]]
-vim.cmd [[ vmap <A-Up> [egv ]]
-vim.cmd [[ vmap <A-j> ]egv ]]
-vim.cmd [[ vmap <A-Down> ]egv ]]
+local opts = { noremap = true, silent = true }
+vim.api.nvim_set_keymap("n", "<A-k>", ":m .-2<CR>", opts);
+vim.api.nvim_set_keymap("n", "<A-j>", ":m .+1<CR>", opts);
+vim.api.nvim_set_keymap("v", "<A-k>", ":m '<-2<CR>gv=gv", opts);
+vim.api.nvim_set_keymap("v", "<A-j>", ":m '>+1<CR>gv=gv", opts);
 
--- NERDCommenter
-vim.cmd [[ nmap <C-l> <plug>NerdCommenterToggle ]]
-vim.cmd [[ vmap <C-l> <plug>NerdCommenterToggle ]]
-
-vim.cmd [[ inoremap jk <Esc> ]]
+-- Remap jk to ESC, because on my work keyboard ESC is hard to reach
+vim.api.nvim_set_keymap("i", "jk", "<Esc>", opts);
