@@ -4,7 +4,7 @@ oil.setup({
     default_file_explorer = true,
     columns = {
         "icon",
-   },
+    },
     keymaps = {
         ["gp"] = "actions.preview",
         ["<CR>"] = "actions.select",

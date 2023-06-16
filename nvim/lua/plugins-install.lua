@@ -17,6 +17,7 @@ Plug "rcarriga/nvim-dap-ui" -- UI for DAP
 
 -- Themes
 Plug "ryanoasis/vim-devicons" -- Various icons used by bufferline and telescope
+Plug "nvim-tree/nvim-web-devicons" -- Various icons used by oil.nvim
 Plug("catppuccin/nvim", { as = "catppuccin" }) -- My theme
 
 -- Collection of common configurations for the Nvim LSP client
