@@ -50,11 +50,11 @@ vim.g.termdebugger = "lldb"
 vim.keymap.set("n", "<Leader>mb", dap.toggle_breakpoint, { noremap = true })
 vim.keymap.set("n", "<Leader>mw", dapui.toggle, { noremap = true })
 vim.keymap.set("n", "<Leader>me", dapui.eval, { noremap = true })
-vim.keymap.set("n", "<silent> <F10>", dap.step_over, { noremap = true })
-vim.keymap.set("n", "<silent> <F11>", dap.step_into, { noremap = true })
-vim.keymap.set("n", "<silent> <S-F11>", dap.step_out, { noremap = true })
-vim.keymap.set("n", "<silent> <F5>", dap.continue, { noremap = true })
-vim.keymap.set("n", "<silent> <F4>", dap.restart, { noremap = true })
+vim.keymap.set("n", "<F10>", dap.step_over, { noremap = true })
+vim.keymap.set("n", "<F11>", dap.step_into, { noremap = true })
+vim.keymap.set("n", "<S-F11>", dap.step_out, { noremap = true })
+vim.keymap.set("n", "<F5>", dap.continue, { noremap = true })
+vim.keymap.set("n", "<F4>", dap.restart, { noremap = true })
 
 --TODO when relevant
 --[[
