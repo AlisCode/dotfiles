@@ -6,6 +6,7 @@ vim.call("plug#begin", "~/.config/nvim/plugged")
 Plug "terrortylor/nvim-comment" -- Comment lines with C-l
 Plug "nvim-treesitter/nvim-treesitter" -- Syntax highlighting with Treesitter
 Plug "akinsho/toggleterm.nvim" -- Handy terminal
+Plug "tpope/vim-unimpaired" -- Many shortcuts including bubble-up and -down
 
 -- Statusline & Tabline
 Plug "nvim-lualine/lualine.nvim" -- Statusline
@@ -28,8 +29,8 @@ Plug "hrsh7th/nvim-cmp" -- Completion engine
 Plug "hrsh7th/cmp-nvim-lsp" -- Completion source from LSP
 Plug "L3MON4D3/LuaSnip" -- Snippet engine, required by nvim-cmp
 
-Plug "nvim-lua/popup.nvim" -- TODO: remove ?
-Plug "nvim-lua/plenary.nvim" -- TODO: remove ?
+Plug "nvim-lua/popup.nvim" -- Common dependency for plugins
+Plug "nvim-lua/plenary.nvim" -- Common dependency for plugins
 
 -- Nvim goodies
 Plug "nvim-telescope/telescope.nvim" -- Basis for Telescope plugins
@@ -45,7 +46,7 @@ Plug "simrat39/rust-tools.nvim" -- Rust-analzyer integration
 Plug "OmniSharp/omnisharp-vim" -- C# LSP integration
 
 -- LSP extensions
-Plug "tjdevries/lsp_extensions.nvim" -- Providing type inlay hints
+Plug "tjdevries/lsp_extensions.nvim" -- Providing type inlay hints. TODO: remove ?
 
 -- Versioning through git
 Plug "tpope/vim-fugitive" -- Multiple Git integration command
