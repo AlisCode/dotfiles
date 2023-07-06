@@ -11,9 +11,6 @@
     // F1 for help, because h is in use
     open_help: Some(( code: F(1), modifiers: ( bits: 0,),)),
 
-    // q to "go back"
-    exit_popup: Some(( code: Char('q'), modifiers: ( bits: 0,),)),
-
-    // Shift-Q to quit the app
-    quit: Some(( code: Char('Q'), modifiers: ( bits: 1,),)),
+    // q to exit the app, just like any other UNIX app (pagers, htop, ..)
+    quit_app: Some(( code: Char('q'), modifiers: ( bits: 0,),)),
 )
