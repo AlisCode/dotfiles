@@ -7,6 +7,7 @@ Plug "terrortylor/nvim-comment" -- Comment lines with C-l
 Plug "nvim-treesitter/nvim-treesitter" -- Syntax highlighting with Treesitter
 Plug "akinsho/toggleterm.nvim" -- Handy terminal
 Plug "tpope/vim-unimpaired" -- Many shortcuts including bubble-up and -down
+Plug "folke/flash.nvim" -- Quick navigation + Treesitter selection
 
 -- Statusline & Tabline
 Plug "nvim-lualine/lualine.nvim" -- Statusline
