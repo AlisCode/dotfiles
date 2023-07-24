@@ -38,6 +38,7 @@ Plug "nvim-telescope/telescope.nvim" -- Basis for Telescope plugins
 Plug "nvim-telescope/telescope-file-browser.nvim" -- File browser
 Plug "nvim-telescope/telescope-dap.nvim" -- DAP integration with telescope
 Plug "nvim-telescope/telescope-ui-select.nvim" -- TODO: unclear ?
+Plug "gbrlsnchs/telescope-lsp-handlers.nvim" -- Replaces awful quickfix with Telescope
 
 -- Rust
 Plug "rust-lang/rust.vim" -- Default rust integration (formatting, file detection)

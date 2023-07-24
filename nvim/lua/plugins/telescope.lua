@@ -17,6 +17,7 @@ telescope.setup{
 telescope.load_extension "file_browser"
 telescope.load_extension "dap"
 telescope.load_extension "ui-select"
+telescope.load_extension "lsp_handlers"
 
 function find_files()
     builtin.find_files { path = "%", respect_gitignore = true }
