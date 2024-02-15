@@ -12,4 +12,7 @@ end
 lspconfig.omnisharp.setup({
     cmd = { "omnisharp", "--languageserver", "--hostPID", pid },
     on_attach = on_attach_omnisharp,
+    flags = {
+        debounce_text_changes = 150,
+    },
 })
