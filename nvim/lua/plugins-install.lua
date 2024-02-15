@@ -42,7 +42,7 @@ Plug "gbrlsnchs/telescope-lsp-handlers.nvim" -- Replaces awful quickfix with Tel
 
 -- Rust
 Plug "rust-lang/rust.vim" -- Default rust integration (formatting, file detection)
-Plug "simrat39/rust-tools.nvim" -- Rust-analzyer integration
+Plug "mrcjkb/rustaceanvim" -- Rust-analzyer integration
 
 -- C#
 Plug "OmniSharp/omnisharp-vim" -- C# LSP integration

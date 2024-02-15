@@ -1,16 +1,27 @@
 -- Defaults for Rust integration
 -- Rust-tools takes care of lspconfig
 local vim = vim
-local rust_tools = require("rust-tools")
-local executors = require("rust-tools.executors")
-local rust_runnables = require("rust-tools.runnables")
-local rust_debuggables = require("rust-tools.debuggables")
-local expand_macro = require("rust-tools.expand_macro")
-local parent_module = require("rust-tools.parent_module")
+local executors = require('rustaceanvim.executors')
 
-rust_tools.setup({
+function runnables()
+    vim.cmd.RustLsp("runnables")
+end
+
+function debuggables()
+    vim.cmd.RustLsp("debuggables")
+end
+
+function expand_macro()
+    vim.cmd.RustLsp("expandMacro")
+end
+
+function parent_module()
+    vim.cmd.RustLsp("parentModule")
+end
+
+vim.g.rustaceanvim = {
     tools = {
-        executor = executors.termopen,
+        executor = executors.toggleterm,
         inlay_hints = {
             show_parameter_hints = false,
             parameter_hints_prefix = "",
@@ -22,14 +33,23 @@ rust_tools.setup({
         debuggables = {
             use_telescope = true
         },
-    }
-})
+    },
+    -- LSP configuration
+    server = {
+        on_attach = function(client, bufnr)
+            -- rust-analyzer keybindings
+            vim.keymap.set("n", "<Leader>mr", runnables, { noremap = true });
+            vim.keymap.set("n", "<Leader>md", debuggables, { noremap = true });
+            vim.keymap.set("n", "<Leader>mme", expand_macro, { noremap = true });
+            vim.keymap.set("n", "gp", parent_module, { noremap = true });
+        end,
+        default_settings = {
+            -- rust-analyzer language server configuration
+            ['rust-analyzer'] = {
+            },
+        },
+    },
+}
 
 -- Vim global
 vim.g.rustfmt_autosave = 1
-
--- Rust-analyzer keybindings
-vim.keymap.set("n", "<Leader>mr", rust_runnables.runnables, { noremap = true })
-vim.keymap.set("n", "<Leader>md", rust_debuggables.debuggables, { noremap = true })
-vim.keymap.set("n", "<Leader>mme", expand_macro.expand_macro, { noremap = true })
-vim.keymap.set("n", "gp", parent_module.parent_module, { noremap = true })
