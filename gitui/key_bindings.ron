@@ -1,16 +1,16 @@
 (
     // Vim-like movement
-    move_left: Some(( code: Char('h'), modifiers: ( bits: 0,),)),
-    move_right: Some(( code: Char('l'), modifiers: ( bits: 0,),)),
-    move_up: Some(( code: Char('k'), modifiers: ( bits: 0,),)),
-    move_down: Some(( code: Char('j'), modifiers: ( bits: 0,),)),
+    move_left: Some(( code: Char('h'), modifiers: "")),
+    move_right: Some(( code: Char('l'), modifiers: "")),
+    move_up: Some(( code: Char('k'), modifiers: "")),
+    move_down: Some(( code: Char('j'), modifiers: "")),
 
     // Override
-    stash_open: Some(( code: Char('l'), modifiers: ( bits: 0,),)),
+    stash_open: Some(( code: Char('l'), modifiers: "")),
 
     // F1 for help, because h is in use
-    open_help: Some(( code: F(1), modifiers: ( bits: 0,),)),
+    open_help: Some(( code: F(1), modifiers: "")),
 
     // q to exit the app, just like any other UNIX app (pagers, htop, ..)
-    quit_app: Some(( code: Char('q'), modifiers: ( bits: 0,),)),
+    quit_app: Some(( code: Char('q'), modifiers: "")),
 )
