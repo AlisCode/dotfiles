@@ -1,0 +1,7 @@
+gui:
+  returnImmediately: true
+  wrapMainPanel: false
+  showBottomLine: false
+  theme:
+    selectedLineBgColor:
+      - reverse
