@@ -15,6 +15,7 @@ Plug "akinsho/bufferline.nvim" -- Tabline
 
 -- Debugging (DAP + DapUI)
 Plug "mfussenegger/nvim-dap" -- Debugger Adapter Protocol integration
+Plug "nvim-neotest/nvim-nio" -- Dependency of nvim-dap-ui
 Plug "rcarriga/nvim-dap-ui" -- UI for DAP
 
 -- Themes
