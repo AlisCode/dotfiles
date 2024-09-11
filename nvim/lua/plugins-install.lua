@@ -45,11 +45,11 @@ Plug "gbrlsnchs/telescope-lsp-handlers.nvim" -- Replaces awful quickfix with Tel
 Plug "rust-lang/rust.vim" -- Default rust integration (formatting, file detection)
 Plug "mrcjkb/rustaceanvim" -- Rust-analzyer integration
 
+-- Gleam
+Plug "gleam-lang/gleam.vim" -- Default Gleam integration (formatting, file detection)
+
 -- C#
 Plug "OmniSharp/omnisharp-vim" -- C# LSP integration
-
--- LSP extensions
-Plug "tjdevries/lsp_extensions.nvim" -- Providing type inlay hints. TODO: remove ?
 
 -- Versioning through git
 Plug "tpope/vim-fugitive" -- Multiple Git integration command
