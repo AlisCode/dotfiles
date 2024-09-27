@@ -2,6 +2,59 @@
 local vim = vim
 local dapui = require("dapui")
 local dap = require("dap")
+local telescope_dap = require("telescope").extensions.dap
+
+-- Launches a Firefox adapter - useful to debug Web applications
+-- No AUR package, needs to be installed from https://github.com/firefox-devtools/vscode-firefox-debug
+dap.adapters.firefox = {
+    type = "executable",
+    command = "node",
+    args = { "/usr/local/bin/vscode-firefox-debug/dist/adapter.bundle.js" },
+}
+
+-- Launches a vscode-js-debug adapter - for debugging node.js applications locally
+-- Requires vscode-js-debug from the AUR
+dap.adapters["pwa-node"] = {
+    type = "server",
+    host = "localhost",
+    port = "${port}",
+    executable = {
+        command = "node",
+        args = {"/usr/lib/node_modules/vscode-js-debug/src/dapDebugServer.js", "${port}"},
+    }
+}
+
+-- Configuration for Typescript + TSX files
+debug_with_firefox = {
+    name = "Debug with Firefox",
+    type = "firefox",
+    request = "launch",
+    reAttach = true,
+    url = "http://localhost:3000",
+    webRoot = "${workspaceFolder}",
+    firefoxExecutable = '/usr/bin/firefox',
+}
+
+-- Configuration for JS files
+debug_file_with_node = {
+    type = "pwa-node",
+    request = "launch",
+    name = "Launch file",
+    program = "${file}",
+    cwd = "${workspaceFolder}",
+}
+
+dap.configurations.typescriptreact = {
+    debug_with_firefox,
+}
+
+dap.configurations.typescript = {
+    debug_with_firefox,
+}
+
+dap.configurations.javascript = {
+    debug_file_with_node,
+}
 
 dapui.setup({
     icons = { expanded = "▾", collapsed = "▸" },
@@ -46,21 +99,20 @@ dapui.setup({
 
 vim.g.termdebugger = "lldb"
 
--- DAP keybindings
-vim.keymap.set("n", "<Leader>mb", dap.toggle_breakpoint, { noremap = true })
-vim.keymap.set("n", "<Leader>mw", dapui.toggle, { noremap = true })
-vim.keymap.set("n", "<Leader>me", dapui.eval, { noremap = true })
-vim.keymap.set("n", "<F10>", dap.step_over, { noremap = true })
-vim.keymap.set("n", "<F11>", dap.step_into, { noremap = true })
-vim.keymap.set("n", "<S-F11>", dap.step_out, { noremap = true })
-vim.keymap.set("n", "<F5>", dap.continue, { noremap = true })
-vim.keymap.set("n", "<F4>", dap.restart, { noremap = true })
+local telescope_dap_curr_lang_configs = function()
+    telescope_dap.configurations({
+        language_filter = function(lang)
+            return lang == vim.bo.filetype
+        end
+    })
+end
 
---TODO when relevant
---[[
-nnoremap <Leader> mi    <cmd>lua require 'dap.ui.widgets'.hover()<CR>
-nnoremap <Leader> mj    <cmd>lua require 'dap.ui'.down()<CR>
-nnoremap <Leader> mk    <cmd>lua require 'dap.ui'.up()<CR>
-nnoremap <Leader> mv    <cmd>Telescope dap variables<CR>
-nnoremap <Leader> mf    <cmd>Telescope dap frames<CR>
---]]
+-- DAP keybindings
+vim.keymap.set("n", "<Leader>db", dap.toggle_breakpoint, { noremap = true })
+vim.keymap.set("n", "<Leader>dw", dapui.toggle, { noremap = true })
+vim.keymap.set("n", "<Leader>de", dapui.eval, { noremap = true })
+vim.keymap.set("n", "<Leader>dc", dap.continue, { noremap = true })
+vim.keymap.set("n", "<Leader>dg", dap.run_to_cursor, { noremap = true })
+vim.keymap.set("n", "<Leader>dr", telescope_dap_curr_lang_configs, { noremap = true })
+vim.keymap.set("n", "<Leader>dq", dap.terminate, { noremap = true })
+vim.keymap.set("n", "<Leader>dv", telescope_dap.variables, { noremap = true })
