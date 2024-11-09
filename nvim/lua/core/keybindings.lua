@@ -1,5 +1,4 @@
 -- Set SPACE as leader key
-vim.cmd [[ nnoremap <SPACE> <Nop> ]]
 vim.g.mapleader = " "
 
 -- Window navigation
