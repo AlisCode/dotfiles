@@ -58,6 +58,7 @@ Plug "OmniSharp/omnisharp-vim" -- C# LSP integration
 Plug "tpope/vim-fugitive" -- Multiple Git integration command
 Plug "airblade/vim-gitgutter" -- Info on git diff on the left of the file (in the gutter)
 Plug "sindrets/diffview.nvim" -- Diffview
+Plug "NeogitOrg/neogit" -- A Git interface
 
 -- Who likes netrw anyway ?
 Plug "stevearc/oil.nvim" -- Netrw replacement to edit the filesystem like a buffer
