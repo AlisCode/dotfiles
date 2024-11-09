@@ -27,4 +27,4 @@ for _, motion in ipairs({ "f", "t", "F", "T" }) do
 end
 
 -- Enables treesitter selection
-vim.keymap.set("n", "<leader>t", flash.treesitter, { noremap = true, silent = true });
+vim.keymap.set("n", "<leader>s", flash.treesitter, { noremap = true, silent = true });

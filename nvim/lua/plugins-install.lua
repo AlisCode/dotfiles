@@ -9,14 +9,20 @@ Plug "akinsho/toggleterm.nvim" -- Handy terminal
 Plug "tpope/vim-unimpaired" -- Many shortcuts including bubble-up and -down
 Plug "folke/flash.nvim" -- Quick navigation + Treesitter selection
 
+Plug "nvim-lua/popup.nvim" -- Common dependency for plugins
+Plug "nvim-lua/plenary.nvim" -- Common dependency for plugins
+
 -- Statusline & Tabline
 Plug "nvim-lualine/lualine.nvim" -- Statusline
 Plug "akinsho/bufferline.nvim" -- Tabline
 
 -- Debugging (DAP + DapUI)
 Plug "mfussenegger/nvim-dap" -- Debugger Adapter Protocol integration
-Plug "nvim-neotest/nvim-nio" -- Dependency of nvim-dap-ui
+Plug "nvim-neotest/nvim-nio" -- Dependency of nvim-dap-ui + neotest
 Plug "rcarriga/nvim-dap-ui" -- UI for DAP
+
+-- Test
+Plug "nvim-neotest/neotest" -- Extensible testing framework
 
 -- Themes
 Plug "ryanoasis/vim-devicons" -- Various icons used by bufferline and telescope
@@ -30,9 +36,6 @@ Plug "neovim/nvim-lspconfig" -- LSP integration
 Plug "hrsh7th/nvim-cmp" -- Completion engine
 Plug "hrsh7th/cmp-nvim-lsp" -- Completion source from LSP
 Plug "L3MON4D3/LuaSnip" -- Snippet engine, required by nvim-cmp
-
-Plug "nvim-lua/popup.nvim" -- Common dependency for plugins
-Plug "nvim-lua/plenary.nvim" -- Common dependency for plugins
 
 -- Nvim goodies
 Plug "nvim-telescope/telescope.nvim" -- Basis for Telescope plugins
