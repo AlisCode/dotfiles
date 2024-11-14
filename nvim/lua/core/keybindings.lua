@@ -1,5 +1,7 @@
 -- Set SPACE as leader key
 vim.g.mapleader = " "
+vim.g.maplocalleader = " "
+vim.api.nvim_set_keymap("n", " ", "<Nop>", { noremap = true, silent = true, })
 
 -- Window navigation
 vim.cmd [[ nmap <silent> <C-A-Up> :wincmd k<CR> ]]
