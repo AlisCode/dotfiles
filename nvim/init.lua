@@ -11,6 +11,7 @@ require("plugins.lsp.cs")
 require("plugins.lsp.python")
 require("plugins.lsp.gleam")
 require("plugins.lsp.nix")
+require("plugins.lsp.typst")
 
 require("plugins.bufferline")
 require("plugins.completion")
