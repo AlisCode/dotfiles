@@ -23,6 +23,7 @@ Plug "rcarriga/nvim-dap-ui" -- UI for DAP
 
 -- Test
 Plug "nvim-neotest/neotest" -- Extensible testing framework
+Plug "nvim-neotest/neotest-go" -- Neotest golang integration
 
 -- Themes
 Plug "ryanoasis/vim-devicons" -- Various icons used by bufferline and telescope

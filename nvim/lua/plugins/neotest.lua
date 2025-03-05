@@ -4,6 +4,7 @@ local rustaceanvim = require("rustaceanvim");
 neotest.setup({
     adapters = {
         require("rustaceanvim.neotest"),
+        require("neotest-go"),
     },
     summary = {
         enabled = true,
