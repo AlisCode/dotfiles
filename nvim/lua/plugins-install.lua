@@ -52,6 +52,9 @@ Plug "mrcjkb/rustaceanvim" -- Rust-analzyer integration
 -- Gleam
 Plug "gleam-lang/gleam.vim" -- Default Gleam integration (formatting, file detection)
 
+-- Coq
+Plug "whonore/Coqtail" -- Coq integration
+
 -- C#
 Plug "OmniSharp/omnisharp-vim" -- C# LSP integration
 
