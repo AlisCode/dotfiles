@@ -1,7 +1,9 @@
 -- Debugger Adapter Protocol integration
+-- TODO: Refactor this into language-specific files
 local vim = vim
 local dapui = require("dapui")
 local dap = require("dap")
+local dapgo = require("dap-go")
 local telescope_dap = require("telescope").extensions.dap
 
 -- Launches a Firefox adapter - useful to debug Web applications
@@ -97,6 +99,10 @@ dapui.setup({
     windows = { indent = 1 },
 })
 
+-- Go-specific
+dapgo.setup()
+
+-- Rust-specific
 vim.g.termdebugger = "lldb"
 
 local telescope_dap_curr_lang_configs = function()
@@ -116,3 +122,7 @@ vim.keymap.set("n", "<Leader>dg", dap.run_to_cursor, { noremap = true })
 vim.keymap.set("n", "<Leader>dr", telescope_dap_curr_lang_configs, { noremap = true })
 vim.keymap.set("n", "<Leader>dq", dap.terminate, { noremap = true })
 vim.keymap.set("n", "<Leader>dv", telescope_dap.variables, { noremap = true })
+vim.keymap.set("n", "<Leader>dn", dap.step_over, { noremap = true })
+vim.keymap.set("n", "<Leader>dN", dap.step_back, { noremap = true })
+vim.keymap.set("n", "<Leader>di", dap.step_into, { noremap = true })
+vim.keymap.set("n", "<Leader>do", dap.step_out, { noremap = true })

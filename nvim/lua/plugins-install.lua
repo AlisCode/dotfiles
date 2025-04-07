@@ -20,6 +20,7 @@ Plug "akinsho/bufferline.nvim" -- Tabline
 Plug "mfussenegger/nvim-dap" -- Debugger Adapter Protocol integration
 Plug "nvim-neotest/nvim-nio" -- Dependency of nvim-dap-ui + neotest
 Plug "rcarriga/nvim-dap-ui" -- UI for DAP
+Plug "leoluz/nvim-dap-go" -- Go debugging
 
 -- Test
 Plug "nvim-neotest/neotest" -- Extensible testing framework
@@ -27,7 +28,7 @@ Plug "nvim-neotest/neotest-go" -- Neotest golang integration
 
 -- Themes
 Plug "ryanoasis/vim-devicons" -- Various icons used by bufferline and telescope
-Plug "nvim-tree/nvim-web-devicons" -- Various icons used by oil.nvim
+Plug "nvim-tree/nvim-web-devicons" -- Various icons used by e.g oil.nvim
 Plug("catppuccin/nvim", { as = "catppuccin" }) -- My theme
 
 -- Collection of common configurations for the Nvim LSP client
