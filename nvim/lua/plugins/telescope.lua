@@ -1,14 +1,14 @@
 -- Telescope setup + extensions
 local vim = vim
 local telescope = require("telescope")
-local actions = require("telescope.actions")
-local builtin = require("telescope.builtin")
+local t_actions = require("telescope.actions")
+local t_builtin = require("telescope.builtin")
 
 telescope.setup{
   defaults = {
     mappings = {
       i = {
-        ["<esc>"] = actions.close
+        ["<esc>"] = t_actions.close
       },
     },
   },
@@ -17,14 +17,14 @@ telescope.setup{
 telescope.load_extension "file_browser"
 telescope.load_extension "dap"
 telescope.load_extension "ui-select"
-telescope.load_extension "lsp_handlers"
 
 function find_files()
-    builtin.find_files { path = "%", respect_gitignore = true }
+    t_builtin.find_files { path = "%", respect_gitignore = true }
 end
 
 -- Telescope bindings
 vim.keymap.set("n", "<C-p>", find_files, { noremap = true })
-vim.keymap.set("n", "<C-f>", builtin.live_grep, { noremap = true })
-vim.keymap.set("n", "<Leader>ws", builtin.lsp_workspace_symbols, { noremap = true })
-vim.keymap.set("n", "<Leader>ds", builtin.lsp_document_symbols, { noremap = true })
+vim.keymap.set("n", "<C-f>", t_builtin.live_grep, { noremap = true })
+vim.keymap.set("n", "<Leader>ws", t_builtin.lsp_workspace_symbols, { noremap = true })
+vim.keymap.set("n", "<Leader>ds", t_builtin.lsp_document_symbols, { noremap = true })
+vim.keymap.set("n", "<Leader>dd", t_builtin.diagnostics, { noremap = true, silent = true })
