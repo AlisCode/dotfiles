@@ -15,5 +15,11 @@ vim.api.nvim_set_keymap("n", "<A-k>", "[e", {});
 vim.api.nvim_set_keymap("v", "<A-j>", "]egv", {});
 vim.api.nvim_set_keymap("v", "<A-k>", "[egv", {});
 
+-- Bubble selection, MacOS compat
+vim.api.nvim_set_keymap("n", "∆", "]e", {});
+vim.api.nvim_set_keymap("n", "˚", "[e", {});
+vim.api.nvim_set_keymap("v", "∆", "]egv", {});
+vim.api.nvim_set_keymap("v", "˚", "[egv", {});
+
 -- Remap jk to ESC, because on my work keyboard ESC is hard to reach
 vim.api.nvim_set_keymap("i", "jk", "<Esc>", { noremap = true, silent = true });
