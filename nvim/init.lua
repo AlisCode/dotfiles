@@ -13,6 +13,7 @@ require("plugins.lsp.gleam")
 require("plugins.lsp.nix")
 require("plugins.lsp.typst")
 require("plugins.lsp.go")
+require("plugins.lsp.null")
 
 require("plugins.bufferline")
 require("plugins.completion")

@@ -12,6 +12,8 @@ Plug "folke/flash.nvim" -- Quick navigation + Treesitter selection
 Plug "nvim-lua/popup.nvim" -- Common dependency for plugins
 Plug "nvim-lua/plenary.nvim" -- Common dependency for plugins
 
+Plug "nvimtools/none-ls.nvim" -- Common utils like linting and formatting
+
 -- Statusline & Tabline
 Plug "nvim-lualine/lualine.nvim" -- Statusline
 Plug "akinsho/bufferline.nvim" -- Tabline
