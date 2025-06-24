@@ -28,6 +28,9 @@ Plug "leoluz/nvim-dap-go" -- Go debugging
 Plug "nvim-neotest/neotest" -- Extensible testing framework
 Plug "fredrikaverpil/neotest-golang" -- Neotest golang integration
 
+-- Coverage
+Plug "andythigpen/nvim-coverage" -- Test coverage
+
 -- Themes
 Plug "ryanoasis/vim-devicons" -- Various icons used by bufferline and telescope
 Plug "nvim-tree/nvim-web-devicons" -- Various icons used by e.g oil.nvim

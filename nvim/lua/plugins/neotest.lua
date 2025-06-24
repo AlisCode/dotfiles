@@ -1,10 +1,20 @@
 local neotest = require("neotest");
 local rustaceanvim = require("rustaceanvim");
 
+-- Golang-specific
+-- Enables test coverage generation when running tests
+local neotest_golang_opts = {
+    runner = "go",
+    go_test_args = {
+        "-v",
+        "-coverprofile=" .. vim.fn.getcwd() .. "/coverage.out",
+    },
+}
+
 neotest.setup({
     adapters = {
         require("rustaceanvim.neotest"),
-        require("neotest-golang"),
+        require("neotest-golang")(neotest_golang_opts),
     },
     summary = {
         enabled = true,
