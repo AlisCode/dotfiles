@@ -14,6 +14,7 @@ require("plugins.lsp.nix")
 require("plugins.lsp.typst")
 require("plugins.lsp.go")
 require("plugins.lsp.null")
+require("plugins.lsp.pkl")
 
 require("plugins.bufferline")
 require("plugins.completion")

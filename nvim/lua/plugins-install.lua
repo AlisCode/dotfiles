@@ -63,6 +63,9 @@ Plug "whonore/Coqtail" -- Coq integration
 -- C#
 Plug "OmniSharp/omnisharp-vim" -- C# LSP integration
 
+-- PKL
+Plug "apple/pkl-neovim" -- Apple PKL integration
+
 -- Versioning through git
 Plug "tpope/vim-fugitive" -- Multiple Git integration command
 Plug "airblade/vim-gitgutter" -- Info on git diff on the left of the file (in the gutter)
