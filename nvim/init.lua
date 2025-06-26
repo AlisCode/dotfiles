@@ -5,6 +5,7 @@ require("core.keybindings")
 require("core.theme")
 
 require("plugins.lsp.keybindings")
+require("plugins.lsp.diagnostics")
 require("plugins.lsp.rust")
 require("plugins.lsp.ts")
 require("plugins.lsp.cs")
