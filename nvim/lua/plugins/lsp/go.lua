@@ -1,7 +1,6 @@
 -- Go LSP configuration through gopls
-local lspconfig = require("lspconfig")
 
-lspconfig.gopls.setup({
+vim.lsp.config('gopls', {
     cmd = { "gopls", },
     settings = {
         gopls = {
@@ -14,3 +13,4 @@ lspconfig.gopls.setup({
         },
     }
 })
+vim.lsp.enable("gopls")

@@ -27,6 +27,7 @@ vim.g.rustaceanvim = {
             parameter_hints_prefix = "",
             other_hints_prefix = "",
         },
+        reload_workspace_from_cargo_toml = true,
         runnables = {
             use_telescope = true
         },
@@ -51,5 +52,5 @@ vim.g.rustaceanvim = {
     },
 }
 
--- Vim global
+-- ft-rust (default neovim plugin) config
 vim.g.rustfmt_autosave = 1

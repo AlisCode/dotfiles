@@ -51,8 +51,7 @@ Plug "nvim-telescope/telescope-dap.nvim" -- DAP integration with telescope
 Plug "nvim-telescope/telescope-ui-select.nvim" -- TODO: unclear ?
 
 -- Rust
-Plug "rust-lang/rust.vim" -- Default rust integration (formatting, file detection)
-Plug "mrcjkb/rustaceanvim" -- Rust-analzyer integration
+Plug "mrcjkb/rustaceanvim" -- Rust-analyzer integration
 
 -- Gleam
 Plug "gleam-lang/gleam.vim" -- Default Gleam integration (formatting, file detection)

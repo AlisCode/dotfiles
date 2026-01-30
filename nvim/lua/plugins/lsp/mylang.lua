@@ -1,7 +1,7 @@
 local lspconfig = require("lspconfig")
 
 vim.lsp.config('mylang', {
-    cmd = { "/home/olivier/Workspace/Rust/mylang/target/debug/lsp" },
+    cmd = vim.lsp.rpc.connect("127.0.0.1", 3333),
     root_dir = vim.fn.getcwd(),
     filetypes = { "mylang" },
 })

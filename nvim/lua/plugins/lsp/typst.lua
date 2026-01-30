@@ -1,12 +1,12 @@
 -- Typst LSP configuration through tinymist
-local lspconfig = require("lspconfig")
 
-lspconfig.tinymist.setup({
+vim.lsp.config('tinymist', {
     settings = {
         exportPdf = "onType",
         semanticTokens = "disable"
     }
-});
+})
+vim.lsp.enable('tinymist')
 
 vim.api.nvim_create_user_command("OpenPdf", function()
   local filepath = vim.api.nvim_buf_get_name(0)

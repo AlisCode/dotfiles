@@ -1,6 +1,6 @@
 -- Python LSP configuration
-local lspconfig = require("lspconfig")
 
-lspconfig.pyright.setup({
+vim.lsp.config('pyright', {
     cmd = { "pyright-langserver", "--stdio" },
 })
+vim.lsp.enable('pyright')

@@ -1,6 +1,6 @@
 -- Gleam LSP configuration
-local lspconfig = require("lspconfig")
 
-lspconfig.gleam.setup({
+vim.lsp.config("gleam", {
     cmd = { "gleam", "lsp" },
 })
+vim.lsp.enable("gleam")
