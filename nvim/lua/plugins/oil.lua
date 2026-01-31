@@ -5,6 +5,9 @@ oil.setup({
     columns = {
         "icon",
     },
+    float = {
+        border = 'rounded',
+    },
     keymaps = {
         ["gp"] = "actions.preview",
         ["<CR>"] = "actions.select",
