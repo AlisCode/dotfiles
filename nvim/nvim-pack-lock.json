@@ -20,6 +20,10 @@
       "rev": "fcea7ff883235d9024dc41e638f164a450c14ca2",
       "src": "https://github.com/folke/flash.nvim"
     },
+    "fluoride": {
+      "rev": "df30862c6144f250250a340d183d0d324fe6f075",
+      "src": "https://github.com/Sang-it/fluoride"
+    },
     "gleam.vim": {
       "rev": "7174886f4974629a4427b0c703d6ce77f39422c5",
       "src": "https://github.com/gleam-lang/gleam.vim"

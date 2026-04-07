@@ -16,6 +16,8 @@ vim.pack.add({
     "https://github.com/nvimtools/none-ls.nvim", -- Common utils like linting and formatting
     "https://github.com/nvimtools/none-ls-extras.nvim", -- Bonus utils like linting and formatting
 
+    "https://github.com/Sang-it/fluoride", -- Symbols navigation through Treesitter
+
     -- Statusline & Tabline
     "https://github.com/nvim-lualine/lualine.nvim", -- Statusline
     "https://github.com/akinsho/bufferline.nvim", -- Tabline
