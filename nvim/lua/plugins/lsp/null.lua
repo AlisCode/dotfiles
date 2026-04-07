@@ -4,8 +4,12 @@ local formatcmd = vim.api.nvim_create_augroup("LspFormatting", {})
 
 null_ls.setup({
     sources = {
+        -- Go
         null_ls.builtins.formatting.gofmt,
         null_ls.builtins.diagnostics.golangci_lint,
+        -- TS/JS
+        null_ls.builtins.formatting.prettier,
+        require("none-ls.diagnostics.eslint"),
     },
     on_attach = function(client, bufnr)
         if client.supports_method("textDocument/formatting") then

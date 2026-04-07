@@ -12,19 +12,26 @@ flash.setup({
 })
 
 -- Setup labels when moving
-local Config = require("flash.config")
-local Char = require("flash.plugins.char")
-for _, motion in ipairs({ "f", "t", "F", "T" }) do
+local config = require("flash.config")
+local char = require("flash.plugins.char")
+for _, motion in ipairs({ "t", "T" }) do
   vim.keymap.set({ "n", "x", "o" }, motion, function()
-    flash.jump(Config.get({
+    flash.jump(config.get({
       mode = "char",
       search = {
-        mode = Char.mode(motion),
+        mode = char.mode(motion),
         max_length = 1,
       },
-    }, Char.motions[motion]))
+    }, char.motions[motion]))
   end)
 end
 
+-- Default "jump"
+vim.keymap.set({ "n", "x", "o" }, "f", function()
+    flash.jump()
+end, { noremap = true, silent = true });
+
 -- Enables treesitter selection
-vim.keymap.set("n", "<leader>s", flash.treesitter, { noremap = true, silent = true });
+vim.keymap.set("n", "<leader>s", function()
+    flash.treesitter()
+end, { noremap = true, silent = true });
